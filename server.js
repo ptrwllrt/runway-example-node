@@ -1,12 +1,23 @@
-var express = require('express');
-var app = express();
+const http = require("http");
 
-app.get('/', function(req, res) {
-  res.send('hello, world!')
-});
+const port = process.env.PORT || 6000;
 
-/* Use PORT environment variable */
-var port = process.env.PORT || 5000;
-server = app.listen(port, function () {
-  console.log('Server listening on port %d in %s mode', server.address().port, app.settings.env);
+const requestHandler = (req, res) => {
+  if (req.url === "/" && req.method === "GET") {
+    res.writeHead(200, { "Content-Type": "text/plain" });
+    res.end("hello, world!");
+  } else {
+    res.writeHead(404, { "Content-Type": "text/plain" });
+    res.end("Not Found");
+  }
+};
+
+const server = http.createServer(requestHandler);
+
+server.listen(port, () => {
+  console.log(
+    `Server listening on port ${port} in ${
+      process.env.NODE_ENV || "development"
+    } mode`
+  );
 });
